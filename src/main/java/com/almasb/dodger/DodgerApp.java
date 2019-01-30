@@ -21,6 +21,7 @@ import static com.almasb.fxgl.app.DSLKt.*;
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
+    //public class som nedarver fra gameapplication og som er nødvendig for at benytte fxgl komponenter.
 public class DodgerApp extends GameApplication {
 
     @Override
@@ -28,10 +29,10 @@ public class DodgerApp extends GameApplication {
 
     }
 
-    @Override
-    protected void initInput() {
-        onKey(KeyCode.A, "Left", () -> {
-            move(Direction.LEFT);
+    @Override       // overskriver metoden "initInput" i superklassen som er importeret
+    protected void initInput() {                  // med domain specific language DSLKt.
+        onKey(KeyCode.A, "Left", () -> {//initInput håndterer Inputs, såsom bevægelsesdynamik for
+            move(Direction.LEFT);                 //objekter/entities med lambda expressions
         });
 
         onKey(KeyCode.D, "Right", () -> {
@@ -47,6 +48,7 @@ public class DodgerApp extends GameApplication {
         });
     }
 
+    //metode som indlæser arraylist for bird entities og tilføjer fra BirdComponent klassen
     private void move(Direction direction) {
         for (Entity bird : getGameWorld().getEntitiesByType(EntityType.BIRD)) {
             BirdComponent comp = bird.getComponent(BirdComponent.class);
@@ -58,13 +60,15 @@ public class DodgerApp extends GameApplication {
     }
 
     @Override
-    protected void initGameVars(Map<String, Object> vars) {
-        vars.put("lives", 3);
-        vars.put("score", 0);
+    protected void initGameVars(Map<String, Object> vars) { //metode med parametre (string og objekt)
+        vars.put("lives", 3);                               // som tilskriver variablerne lives med 3,
+        vars.put("score", 0);                               // og score med 0
     }
 
+    //overskriver initGame(), og tilføjer listener til spillet som overvåger variablen "lives"
+    // med if-statement, hvis denne når nul.
     @Override
-    protected void initGame() {
+    protected void initGame() { //listener som overvåger variablen "lives" med if-statement, for
         getGameState().<Integer>addListener("lives", (prev, now) -> {
             if (now == 0) {
                 getDisplay().showConfirmationBox("Game Over. Continue?", yes -> {
@@ -84,6 +88,11 @@ public class DodgerApp extends GameApplication {
         respawnEntities();
     }
 
+    //metode som binder spilobjekterne til det såkaldte Stage, med en ramme på 40 pixels fra den ydre
+    // ramme/stage, sådan at hele spilobjektet er synligt på skærmen.
+    // spilobjektet(entity) "ball" indsættes/spawnes på "scenen" på midten af den horisontale akse,
+    // og 30 pixels nede ad den vertikale akse, og spilobjekterne birds placeres med afstand fra
+    // hinanden vha. et for-loop
     private void respawnEntities() {
         Entity bounds = Entities.makeScreenBounds(40);
         getGameWorld().addEntity(bounds);
@@ -97,7 +106,10 @@ public class DodgerApp extends GameApplication {
             spawn("bird", x, y);
         }
     }
-
+    //nedenståede overskriver metoden initPhysics, og fjerner gravitationen, tilføjer kollisionscontrol
+    // og afspiiler en lydfil når kollisioner forekommer. Endvidere decrementes variablen "Lives",
+    // og alle spilobjekterne (entities) fjernes og genindlæses til at fremstå på de pixels der er
+    // anført i metoden ovenfor - respawnEntities() {}
     @Override
     protected void initPhysics() {
         getPhysicsWorld().setGravity(0, 0);
@@ -117,7 +129,7 @@ public class DodgerApp extends GameApplication {
     }
 
     @Override
-    protected void initUI() {
+    protected void initUI() {   //metoden tilføjer variablerne lives og score til spilskærmen (stage)
         Text textLives = addVarText(10, 20, "lives");
         textLives.setFont(getUIFactory().newFont(26));
 
@@ -125,12 +137,12 @@ public class DodgerApp extends GameApplication {
         textScore.setFont(getUIFactory().newFont(26));
     }
 
-    @Override
+    @Override // metode som tilskriver variablen tpf med ++(increment) når inc(varName:"score"...) opdateres.
     protected void onUpdate(double tpf) {
         inc("score", +1);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { //starter applikationen
         launch(args);
     }
 }

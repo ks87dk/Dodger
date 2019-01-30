@@ -20,14 +20,14 @@ import static com.almasb.fxgl.app.DSLKt.*;
 public class DodgerFactory implements EntityFactory {
 
     @Spawns("ball")
-    public Entity newBall(SpawnData data) {
-        PhysicsComponent physics = new PhysicsComponent();
+    public Entity newBall(SpawnData data) {     // metoden knytter spilobjektet til physics world,
+        PhysicsComponent physics = new PhysicsComponent();  // som kontrollerer dette bl.a, ved hastigheden.
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setFixtureDef(new FixtureDef().restitution(1.0f));
         physics.setOnPhysicsInitialized(() -> physics.setLinearVelocity(350, 350));
 
-        return Entities.builder()
-                .type(EntityType.BALL)
+        return Entities.builder() //her indlæses objektet med komponenter og parametre som det gør sig af-
+                .type(EntityType.BALL)  //hængigt af, såsom at være knyttet physics world
                 .from(data)
                 .viewFromNodeWithBBox(texture("ball.png", 40, 40))
                 .with(physics)

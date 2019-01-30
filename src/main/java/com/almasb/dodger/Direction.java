@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
+// tildeler bevægelsesmønster sådan at bird entities bevæger sig i forskellig retning af hinanden
 public enum Direction {
     UP(new Point2D(0, -1)),
     DOWN(new Point2D(0, 1)),
